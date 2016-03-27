@@ -5,6 +5,7 @@
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
-class Submissions
+class Submissions extends VoatObject
 {
+
 }

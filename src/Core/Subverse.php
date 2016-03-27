@@ -1,5 +1,4 @@
 <?php namespace Devsi\PhpVoat\Core;
-use Devsi\PhpVoat\Exception\JsonResponseException;
 
 /**
  *
@@ -15,7 +14,7 @@ class Subverse extends VoatObject
      * Note: soon to be deprecated
      *
      * @return Subverse[]
-     * @throws JsonResponseException
+     * @throws \Devsi\PhpVoat\Exception\JsonResponseException
      */
     public function getDefaultSubverses()
     {
@@ -23,10 +22,10 @@ class Subverse extends VoatObject
 
         $response = $this->restClient->get(Endpoints::LEGACY_DEFAULT_SUBVERSES);
 
-        if ($response->getStatusCode() == 200)
-        {
-            $raw_subverse_names = $this->getResponseBody($response);
+        $raw_subverse_names = $this->getResponseBody($response);
 
+        if ($raw_subverse_names)
+        {
             // build an array of subverses
             foreach ($raw_subverse_names as $name)
             {

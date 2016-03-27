@@ -1,7 +1,6 @@
 <?php namespace Devsi\PhpVoatTests;
 
 use Devsi\PhpVoat\PhpVoat;
-use Devsi\PhpVoat\Core;
 
 /**
  * Test Voat submissions
@@ -13,7 +12,7 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function can_retrieve_submissions_for_subverse()
+    public function can_retrieve_default_subverses()
     {
         $subverse = PhpVoat::Subverse();
         $defaultSubverses = $subverse->getDefaultSubverses();

@@ -58,15 +58,20 @@ class VoatObject
      */
     protected function getResponseBody(ResponseInterface $response)
     {
-        $raw = $response->getBody()->getContents();
+        $output = null;
 
-        // return raw body
-        if ($this->use_raw)
-            return $raw;
+        if ($response->getStatusCode() == 200)
+        {
+            $raw = $response->getBody()->getContents();
 
-        $output = json_decode($raw);
-        if (is_null($output))
-            throw new JsonResponseException("Failed to decode json response.");
+            // return raw body
+            if ($this->use_raw)
+                return $raw;
+
+            $output = json_decode($raw);
+            if (is_null($output))
+                throw new JsonResponseException("Failed to decode json response.");
+        }
 
         return $output;
     }
