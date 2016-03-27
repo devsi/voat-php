@@ -20,7 +20,7 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
         // assert array
         $this->assertInternalType("array", $defaultSubverses);
 
-        // assert items are instance of subverse
+        // assert objects are instance of Subverse
         if (count($defaultSubverses) > 0)
         {
             $single = $defaultSubverses[0];

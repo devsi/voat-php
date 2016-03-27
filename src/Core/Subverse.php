@@ -34,6 +34,9 @@ class Subverse extends VoatObject
 
                 $subverses[] = $subverse;
             }
+        } else {
+            // return raw
+            return $raw_subverse_names;
         }
 
         return $subverses;
