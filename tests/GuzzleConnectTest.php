@@ -36,7 +36,7 @@ class GuzzleConnectTest extends \PHPUnit_Framework_TestCase
      */
     public function voat_object_guzzle_injected()
     {
-        $voatRestClient = PhpVoat::Subverse()->getRestClient();
-        $this->assertInstanceOf("GuzzleHttp\\Client", $voatRestClient);
+        $voatRestClient = PhpVoat::Subverse()->getHttpClient();
+        $this->assertInstanceOf("Devsi\\PhpVoat\\Contract\\HttpClientInterface", $voatRestClient);
     }
 }

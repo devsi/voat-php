@@ -23,7 +23,7 @@ class Subverse extends VoatObject
     {
         $subverses = array();
 
-        $response = $this->restClient->get(Endpoints::LEGACY_DEFAULT_SUBVERSES);
+        $response = $this->getHttpClient()->get(Endpoints::LEGACY_DEFAULT_SUBVERSES);
 
         $raw_subverse_names = $this->getResponseBody($response);
 
@@ -32,7 +32,7 @@ class Subverse extends VoatObject
             // build an array of subverses
             foreach ($raw_subverse_names as $name)
             {
-                $subverse = new Subverse($this->getRestClient());
+                $subverse = new Subverse($this->getHttpClient());
                 $subverse->name = $name;
 
                 $subverses[] = $subverse;
@@ -56,16 +56,25 @@ class Subverse extends VoatObject
     {
         $subverses = array();
 
-        $response = $this->restClient->get(Endpoints::LEGACY_TOP200_SUBVERSES);
+        $response = $this->getHttpClient()->get(Endpoints::LEGACY_TOP200_SUBVERSES);
+
         $raw_subverses = $this->getResponseBody($response);
 
+        $subverse_keys = array("Name", "Description", "Subscribers", "Created");
         if ($raw_subverses)
         {
             // build an array of subverses
             foreach ($raw_subverses as $string_to_split)
             {
-                $subverse = new Subverse($this->getRestClient());
-                //$data = $this->formatLegacyVoatString($string_to_split);
+                $subverse = new Subverse($this->getHttpClient());
+                $data = $this->formatLegacyVoatString($string_to_split, $subverse_keys);
+
+                $subverse->name = $data['Name'];
+                $subverse->description = $data['Description'];
+                $subverse->subscriber_count = $data["Subscribers"];
+                $subverse->created_on = $data["Created"];
+
+                $subverses[] = $subverse;
             }
         }
 

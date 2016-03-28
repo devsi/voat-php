@@ -4,7 +4,8 @@ use Devsi\PhpVoat\Core\BannedUser;
 use Devsi\PhpVoat\Core\Submission;
 use Devsi\PhpVoat\Core\Subverse;
 use Devsi\PhpVoat\Core\VoatObject;
-use GuzzleHttp\Client;
+use Devsi\PhpVoat\Adapter\GuzzleHttpClient;
+use Devsi\PhpVoat\Contract\HttpClientInterface;
 
 /**
  * Factory class for Voat Objects
@@ -45,11 +46,11 @@ class PhpVoat
     /**
      * Creates a new instance of Http Client.
      *
-     * @return Client
+     * @return HttpClientInterface
      */
     protected static function GetHttpClient()
     {
-        return new Client([
+        return new GuzzleHttpClient([
             "base_uri" => VoatObject::API_BASE . VoatObject::API_VER
         ]);
     }

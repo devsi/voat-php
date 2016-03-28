@@ -19,13 +19,7 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
 
         // assert array
         $this->assertInternalType("array", $defaultSubverses);
-
-        // assert objects are instance of Subverse
-        if (count($defaultSubverses) > 0)
-        {
-            $single = $defaultSubverses[0];
-            $this->assertInstanceOf("Devsi\\PhpVoat\\Core\\Subverse", $single);
-        }
+        $this->assertIsSubverse($defaultSubverses);
     }
 
     /**
@@ -38,12 +32,24 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
 
         // assert array
         $this->assertInternalType("array", $top200);
+        $this->assertIsSubverse($top200);
+    }
 
+    /**
+     * Asserts an array of subverses
+     * @param mixed
+     */
+    private function assertIsSubverse($test)
+    {
+        $single = null;
         // assert objects are instance of Subverse
-        if (count($top200) > 0)
+        if (is_array($test))
         {
-            $single = $top200[0];
-            $this->assertInstanceOf("Devsi\\PhpVoat\\Core\\Subverse", $single);
-        }
+            if (count($test) > 0)
+                $single = $test[0];
+        } else
+            $single = $test;
+
+        $this->assertInstanceOf("Devsi\\PhpVoat\\Core\\Subverse", $single);
     }
 }

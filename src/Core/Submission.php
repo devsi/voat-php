@@ -16,7 +16,7 @@ class Submission extends VoatObject
      */
     public function getBannedHostnames()
     {
-        $response = $this->getRestClient()->get(Endpoints::LEGACY_BANNED_HOSTNAMES);
+        $response = $this->getHttpClient()->get(Endpoints::LEGACY_BANNED_HOSTNAMES);
         $bannedHostnames = $this->getResponseBody($response);
 
         return $bannedHostnames;

@@ -1,7 +1,6 @@
 <?php namespace Devsi\PhpVoat\Core;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
+use Devsi\PhpVoat\Contract\HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -30,23 +29,23 @@ class VoatObject
     protected $use_raw = false;
 
     /**
-     * @var Client
+     * @var HttpClientInterface
      */
-    protected $restClient;
+    protected $httpClient;
 
-    public function __construct(Client $restClient)
+    public function __construct(HttpClientInterface $httpClient)
     {
-        $this->restClient = $restClient;
+        $this->httpClient = $httpClient;
     }
 
     /**
      * Returns the rest client used for this object.
      *
-     * @return Client
+     * @return HttpClientInterface
      */
-    public function getRestClient()
+    public function getHttpClient()
     {
-        return $this->restClient;
+        return $this->httpClient;
     }
 
     /**
@@ -81,20 +80,24 @@ class VoatObject
      *
      *      "Username: pinky, reason: narf, added on: 1/8/2014 1:11:00pm, added by: brain"
      *
-     * @param $string
+     * @param string $string
+     * @param array $keys
      * @return array
      */
-    protected function formatLegacyVoatString($string)
+    protected function formatLegacyVoatString($string, $keys)
     {
-        $output = array();
+        // due to slightly awkwardly formatted return data, we create a regex from a given array of keys
+        $regex = array_reduce($keys, function ($carry, $item) {
+            return $carry == "^" ? sprintf("%s%s:\\s?", $carry, $item) : sprintf("%s|,\\s?%s:\\s?", $carry, $item);
+        }, '^');
 
-        $pairs = explode(",", $string);
-        foreach ($pairs as $pair)
-        {
-            list($key, $value) = explode(":", $pair, 2);
-            $output[trim($key)] = trim($value);
-        }
+        // use our regex to split the string in to its chunks
+        $values = preg_split("/$regex/i", $string);
 
-        return $output;
+        // remove the first item due to the way i've written this regex.
+        if (count($values) > 4)
+            array_shift($values);
+
+        return array_combine($keys, $values);
     }
 }

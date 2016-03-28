@@ -22,17 +22,20 @@ class BannedUser extends User
     {
         $bannedUsers = array();
 
-        $response = $this->getRestClient()->get(Endpoints::LEGACY_BANNED_USERS);
+        $response = $this->getHttpClient()->get(Endpoints::LEGACY_BANNED_USERS);
 
         $users = $this->getResponseBody($response);
 
         if (is_array($users))
         {
+            $keys = array("Username", "reason", "added on", "added by");
+
             // build array of banned users
             foreach($users as $string_to_split)
             {
-                $u = new BannedUser($this->getRestClient());
-                $data = $this->formatLegacyVoatString($string_to_split);
+                $u = new BannedUser($this->getHttpClient());
+
+                $data = $this->formatLegacyVoatString($string_to_split, $keys);
 
                 $u->username = $data["Username"];
                 $u->reason = $data["reason"];
