@@ -116,6 +116,11 @@ class VoatObject
 
         if (is_array($rawData))
         {
+            if (count(array_filter(array_keys($rawData), 'is_string')) > 0)
+            {
+                return $callback($rawData);
+            }
+
             foreach($rawData as $data)
             {
                 $output[] = $callback($data);

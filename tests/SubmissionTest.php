@@ -1,5 +1,6 @@
 <?php namespace Devsi\PhpVoatTests;
 
+use Devsi\PhpVoat\Core\Submission;
 use Devsi\PhpVoat\PhpVoat;
 
 /**
@@ -14,10 +15,16 @@ class SubmissionTest extends \PHPUnit_Framework_TestCase
      */
     public function can_retrieve_a_list_of_banned_hostnames()
     {
-        $submission = PhpVoat::submission();
-        $bannedHostnames = $submission->getBannedHostnames();
+        $hostnames = PhpVoat::submission()->getBannedHostnames();
+        $this->assertInternalType("array", $hostnames);
+    }
 
-        // assert array
-        $this->assertInternalType("array", $bannedHostnames);
+    /**
+     * @test
+     */
+    public function can_retreive_a_single_submission()
+    {
+        $submission = PhpVoat::submission()->getSingleSubmission(123456);
+        $this->assertInstanceOf(Submission::class, $submission);
     }
 }

@@ -53,4 +53,48 @@ class Submission extends VoatObject
 
         return $bannedHostnames;
     }
+
+    /**
+     * Returns a single submission object of a given id
+     * Note: soon to be deprecated
+     *
+     * @param int $id
+     * @return Submission
+     */
+    public function getSingleSubmission($id)
+    {
+        $submission = $this->fetchData(Endpoints::LEGACY_SINGLE_SUBMISSION . $id, function($data) {
+            return $this->submissionFromLegacyRaw($data);
+        });
+
+        return $submission;
+    }
+
+    /**
+     * Creates a new Submission from the raw content of a legacy API call.
+     *
+     * @param array $submission
+     * @return Submission
+     */
+    private function submissionFromLegacyRaw($submission)
+    {
+        $sub = new Submission($this->getHttpClient());
+
+        $sub->id = $submission["Id"];
+        $sub->title = $submission["Title"];
+        $sub->linkDescription = $submission["Linkdescription"];
+        $sub->content = $submission["MessageContent"];
+        $sub->type = $submission["Type"];
+        $sub->subverse = $submission["Subverse"];
+        $sub->postedBy = $submission["Name"];
+        $sub->datePosted = $submission["Date"];
+        $sub->dateEdited = $submission["LastEditDate"];
+        $sub->rankValue = $submission["Rank"];
+        $sub->thumbnailUrl = $submission["Thumbnail"];
+        $sub->likes = $submission["Likes"];
+        $sub->dislikes = $submission["Dislikes"];
+        $sub->commentCount = $submission["CommentCount"];
+
+        return $sub;
+    }
 }
