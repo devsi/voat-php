@@ -75,4 +75,26 @@ class VoatObject
 
         return $output;
     }
+
+    /**
+     * Voat legacy data is sometimes supplied as a string as follows:
+     *
+     *      "Username: pinky, reason: narf, added on: 1/8/2014 1:11:00pm, added by: brain"
+     *
+     * @param $string
+     * @return array
+     */
+    protected function formatLegacyVoatString($string)
+    {
+        $output = array();
+
+        $pairs = explode(",", $string);
+        foreach ($pairs as $pair)
+        {
+            list($key, $value) = explode(":", $pair, 2);
+            $output[trim($key)] = trim($value);
+        }
+
+        return $output;
+    }
 }

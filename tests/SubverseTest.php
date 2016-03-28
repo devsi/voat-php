@@ -27,4 +27,23 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf("Devsi\\PhpVoat\\Core\\Subverse", $single);
         }
     }
+
+    /**
+     * @test
+     */
+    public function can_retrieve_top_200_subverses()
+    {
+        $subverse = PhpVoat::Subverse();
+        $top200 = $subverse->getTop200Subverses();
+
+        // assert array
+        $this->assertInternalType("array", $top200);
+
+        // assert objects are instance of Subverse
+        if (count($top200) > 0)
+        {
+            $single = $top200[0];
+            $this->assertInstanceOf("Devsi\\PhpVoat\\Core\\Subverse", $single);
+        }
+    }
 }

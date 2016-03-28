@@ -8,6 +8,9 @@
 class Subverse extends VoatObject
 {
     protected $name;
+    protected $description;
+    protected $subscriber_count;
+    protected $created_on;
 
     /**
      * Returns a list of default subverses shown to guests
@@ -43,12 +46,69 @@ class Subverse extends VoatObject
     }
 
     /**
-     * Return the name of the subverse
+     * Returns a list of the top 200 subverses
+     * Notes: soon to be deprecated
+     *
+     * @returns Subverse[]
+     * @throws \Devsi\PhpVoat\Exception\JsonResponseException
+     */
+    public function getTop200Subverses()
+    {
+        $subverses = array();
+
+        $response = $this->restClient->get(Endpoints::LEGACY_TOP200_SUBVERSES);
+        $raw_subverses = $this->getResponseBody($response);
+
+        if ($raw_subverses)
+        {
+            // build an array of subverses
+            foreach ($raw_subverses as $string_to_split)
+            {
+                $subverse = new Subverse($this->getRestClient());
+                //$data = $this->formatLegacyVoatString($string_to_split);
+            }
+        }
+
+        return $subverses;
+    }
+
+    /**
+     * Return the name of the subverse.
      *
      * @return mixed
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Returns a description of this subverse.
+     *
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Returns the count of subscribers for this subverse.
+     *
+     * @return mixed
+     */
+    public function getSubscriberCount()
+    {
+        return $this->subscriber_count;
+    }
+
+    /**
+     * Returns the date the Subverse was created.
+     *
+     * @return string
+     */
+    public function getCreatedOn()
+    {
+        return $this->created_on;
     }
 }

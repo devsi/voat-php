@@ -13,8 +13,10 @@ class BannedUser extends User
 
     /**
      * Returns a list of banned users on Voat.
+     * Note: soon to be deprecated
      *
      * @return BannedUser[]
+     * @throws \Devsi\PhpVoat\Exception\JsonResponseException
      */
     public function getAll()
     {
@@ -30,7 +32,7 @@ class BannedUser extends User
             foreach($users as $string_to_split)
             {
                 $u = new BannedUser($this->getRestClient());
-                $data = $this->formatBannedUserString($string_to_split);
+                $data = $this->formatLegacyVoatString($string_to_split);
 
                 $u->username = $data["Username"];
                 $u->reason = $data["reason"];
@@ -45,28 +47,6 @@ class BannedUser extends User
         }
 
         return $bannedUsers;
-    }
-
-    /**
-     * Voat banned user info is a string supplied as follows:
-     *
-     *      "Username: pinky, reason: narf, added on: 1/8/2014 1:11:00pm, added by: brain"
-     *
-     * @param $string
-     * @return array
-     */
-    private function formatBannedUserString($string)
-    {
-        $output = array();
-
-        $pairs = explode(",", $string);
-        foreach ($pairs as $pair)
-        {
-            list($key, $value) = explode(":", $pair, 2);
-            $output[trim($key)] = trim($value);
-        }
-
-        return $output;
     }
 
     /**

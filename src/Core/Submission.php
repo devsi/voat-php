@@ -9,6 +9,7 @@ class Submission extends VoatObject
 {
     /**
      * Returns a list of banned hostnames for submission links as array
+     * Note: soon to be deprecated
      *
      * @return string[]
      * @throws \Devsi\PhpVoat\Exception\JsonResponseException
