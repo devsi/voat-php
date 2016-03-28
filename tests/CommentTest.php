@@ -1,18 +1,19 @@
 <?php namespace Devsi\PhpVoatTests;
 
+use Devsi\PhpVoat\Core\Comment;
 use Devsi\PhpVoat\PhpVoat;
 
 /**
- * Test Voat submissions
+ * Test Voat single comment
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
-class UserTest extends \PHPUnit_Framework_TestCase
+class CommentTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function can_retrieve_banned_users()
+    public function can_retreive_a_single_comment()
     {
 
     }

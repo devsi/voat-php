@@ -1,58 +1,72 @@
 <?php namespace Devsi\PhpVoat;
 
-use Devsi\PhpVoat\Core\BannedUser;
-use Devsi\PhpVoat\Core\Submission;
-use Devsi\PhpVoat\Core\Submissions;
-use Devsi\PhpVoat\Core\Subverse;
-use Devsi\PhpVoat\Core\VoatObject;
+use Devsi\PhpVoat\Provider;
 use Devsi\PhpVoat\Adapter\GuzzleHttpClient;
 use Devsi\PhpVoat\Contract\HttpClientInterface;
 
 /**
- * Factory class for Voat Objects
+ * Accessor class for all Voat objects
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
 class PhpVoat
 {
     /**
-     * Get Subverse object.
-     *
-     * @return Subverse
+     * URI base for Voat API.
      */
-    public static function subverse()
+    const API_BASE = "https://voat.co/api/";
+
+    /**
+     * Voat API version number.
+     * Not implemented until new Voat API is released.
+     */
+    const API_VER = "";
+
+
+    /**
+     * Return an object that can provide Subverse data.
+     *
+     * @param bool $returnRaw
+     * @return Provider\SubverseProvider
+     */
+    public function subverse($returnRaw = false)
     {
-        return new Subverse( static::getHttpClient() );
+        return new Provider\SubverseProvider( static::getHttpClient(), $returnRaw );
     }
 
     /**
-     * Get Submission object.
+     * Returns an object that can provide User data.
      *
-     * @return Submission
+     * @param bool $returnRaw
+     * @return Provider\UserProvider
      */
-    public static function submission()
+    public function user($returnRaw = false)
     {
-        return new Submission( static::getHttpClient() );
+        return new Provider\UserProvider( static::getHttpClient(), $returnRaw );
     }
 
     /**
-     * Get Submissions object.
+     * Returns an object that can provide Submission data
      *
-     * @return Submissions
+     * @param bool $returnRaw
+     * @return Provider\SubmissionProvider
      */
-    public static function submissions()
+    public function submission($returnRaw = false)
     {
-        return new Submissions( static::getHttpClient() );
+        return new Provider\SubmissionProvider( static::getHttpClient(), $returnRaw );
     }
 
     /**
-     * Get a BannedUser object.
+     * Returns an object that can provide Comment data
      *
+     * @param bool $returnRaw
+     * @return Provider\CommentProvider
      */
-    public static function bannedUser()
+    public function comment($returnRaw = false)
     {
-        return new BannedUser( static::getHttpClient() );
+        return new Provider\CommentProvider( static::getHttpClient(), $returnRaw );
     }
+
 
     /**
      * Creates a new instance of Http Client.
@@ -62,7 +76,7 @@ class PhpVoat
     public static function getHttpClient()
     {
         return new GuzzleHttpClient([
-            "base_uri" => VoatObject::API_BASE . VoatObject::API_VER
+            "base_uri" => static::API_BASE . static::API_VER
         ]);
     }
 }

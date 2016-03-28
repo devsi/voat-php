@@ -1,41 +1,35 @@
-<?php namespace Devsi\PhpVoat\Core;
+<?php namespace Devsi\PhpVoat\Provider;
 
 use Devsi\PhpVoat\Contract\HttpClientInterface;
+use Devsi\PhpVoat\Exception\JsonResponseException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Base class for all voat objects
+ *
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
-class VoatObject
+abstract class Provider
 {
-    /**
-     * URI base for Voat API.
-     */
-    const API_BASE = "https://voat.co/api/";
-
-    /**
-     * Voat API version number.
-     * Not implemented until new Voat API is released.
-     */
-    const API_VER = "";
-
-    /**
-     * Set to true if wrapper must return raw API body.
-     *
-     * @var bool
-     */
-    protected $use_raw = false;
-
     /**
      * @var HttpClientInterface
      */
     protected $httpClient;
 
-    public function __construct(HttpClientInterface $httpClient)
+    /**
+     * If true, will return content as raw response string
+     *
+     * @var bool
+     */
+    protected $asRaw;
+
+    /**
+     * @param HttpClientInterface $httpClient
+     */
+    public function __construct(HttpClientInterface $httpClient, $asRaw = false)
     {
         $this->httpClient = $httpClient;
+        $this->asRaw = $asRaw;
     }
 
     /**
@@ -49,53 +43,33 @@ class VoatObject
     }
 
     /**
-     * Magic getter
-     *
-     * @param $property
-     * @return mixed
-     */
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
-
-    /**
-     * Magic setter
-     *
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value) {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
-    }
-
-    /**
      * Given a PSR7 response, retrieve the body contents.
      *
      * @param ResponseInterface $response
      * @return mixed
-     * @throws JsonResponseException
+     * @throws \HttpException
      */
     protected function getResponseBody(ResponseInterface $response)
     {
-        $output = null;
-
         if ($response->getStatusCode() == 200)
         {
-            $raw = $response->getBody()->getContents();
-
-            // return raw body
-            if ($this->use_raw)
-                return $raw;
-
-            $output = json_decode($raw, true);
-            if (is_null($output))
-                throw new JsonResponseException("Failed to decode json response.");
+            return $response->getBody()->getContents();
         }
+        return null;
+    }
 
+    /**
+     * Decodes the http response string
+     *
+     * @param string $responseString
+     * @return array
+     * @throws JsonResponseException
+     */
+    protected function decodeResponse($responseString)
+    {
+        $output = json_decode($responseString, true);
+        if (is_null($output))
+            throw new JsonResponseException("Failed to decode json response.");
         return $output;
     }
 
@@ -105,30 +79,29 @@ class VoatObject
      *
      * @param string $endpoint
      * @param callable $callback
+     * @param bool $asRaw
      * @return mixed
      */
-    protected function fetchData($endpoint, callable $callback)
+    protected function fetchData($endpoint, callable $callback, $asRaw = false)
     {
         $response = $this->getHttpClient()->get($endpoint);
-        $rawData = $this->getResponseBody($response);
-
+        $raw = $this->getResponseBody($response);
         $output = array();
 
-        if (is_array($rawData))
-        {
-            if (count(array_filter(array_keys($rawData), 'is_string')) > 0)
-            {
-                return $callback($rawData);
-            }
+        // return raw?
+        if ($asRaw || $this->asRaw)
+            return $raw;
 
-            foreach($rawData as $data)
-            {
-                $output[] = $callback($data);
-            }
-        } else
-        {
-            return $rawData;
-        }
+        // decode the response string
+        $data = $this->decodeResponse($raw);
+
+        // a simple associative array? Execute callback and return.
+        if (count(array_filter(array_keys($data), 'is_string')) > 0)
+            return $callback($data);
+
+        // an array of data, iterate and execute callback.
+        foreach($data as $string)
+            $output[] = $callback($string);
 
         return $output;
     }

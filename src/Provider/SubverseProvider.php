@@ -1,48 +1,47 @@
-<?php namespace Devsi\PhpVoat\Core;
+<?php namespace Devsi\PhpVoat\Provider;
+
+use Devsi\PhpVoat\Model;
 
 /**
  *
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
-class Subverse extends VoatObject
+class SubverseProvider extends Provider
 {
-    protected $name;
-    protected $description;
-    protected $subscriberCount;
-    protected $createdOn;
-
     /**
      * Returns a list of default subverses shown to guests
-     * Note: soon to be deprecated
      *
-     * @return Subverse[]
+     * @return Model\Subverse[]
+     * @version Legacy
      */
     public function getDefaultSubverses()
     {
-        $subverses = $this->fetchData(Endpoints::LEGACY_DEFAULT_SUBVERSES, function ($data) {
-            $subverse = new Subverse($this->getHttpClient());
+        return $this->fetchData(Endpoints::LEGACY_DEFAULT_SUBVERSES, function ($data)
+        {
+            // callback data providers a name only.
+            $subverse = new Model\Subverse();
+
             $subverse->name = $data;
 
             return $subverse;
         });
-
-        return $subverses;
     }
 
     /**
      * Returns a list of the top 200 subverses
-     * Notes: soon to be deprecated
      *
-     * @returns Subverse[]
+     * @returns Model\Subverse[]
+     * @version Legacy
      */
     public function getTop200Subverses()
     {
         $keys = array("Name", "Description", "Subscribers", "Created");
 
-        $subverses = $this->fetchData(Endpoints::LEGACY_TOP200_SUBVERSES, function ($data) use($keys)
+        return $this->fetchData(Endpoints::LEGACY_TOP200_SUBVERSES, function ($data) use($keys)
         {
-            $subverse = new Subverse($this->getHttpClient());
+            // callback data is formatted for legacy api.
+            $subverse = new Model\Subverse();
             $data = $this->formatLegacyVoatString($data, $keys);
 
             $subverse->name = $data['Name'];
@@ -52,7 +51,5 @@ class Subverse extends VoatObject
 
             return $subverse;
         });
-
-        return $subverses;
     }
 }

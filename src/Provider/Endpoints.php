@@ -1,4 +1,4 @@
-<?php namespace Devsi\PhpVoat\Core;
+<?php namespace Devsi\PhpVoat\Provider;
 
 /**
  * A static class defining known Voat endpoints
