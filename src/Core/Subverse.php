@@ -9,8 +9,8 @@ class Subverse extends VoatObject
 {
     protected $name;
     protected $description;
-    protected $subscriber_count;
-    protected $created_on;
+    protected $subscriberCount;
+    protected $createdOn;
 
     /**
      * Returns a list of default subverses shown to guests
@@ -27,7 +27,7 @@ class Subverse extends VoatObject
 
         $raw_subverse_names = $this->getResponseBody($response);
 
-        if ($raw_subverse_names)
+        if (is_array($raw_subverse_names))
         {
             // build an array of subverses
             foreach ($raw_subverse_names as $name)
@@ -60,9 +60,10 @@ class Subverse extends VoatObject
 
         $raw_subverses = $this->getResponseBody($response);
 
-        $subverse_keys = array("Name", "Description", "Subscribers", "Created");
-        if ($raw_subverses)
+        if (is_array($raw_subverses))
         {
+            $subverse_keys = array("Name", "Description", "Subscribers", "Created");
+
             // build an array of subverses
             foreach ($raw_subverses as $string_to_split)
             {
@@ -71,53 +72,16 @@ class Subverse extends VoatObject
 
                 $subverse->name = $data['Name'];
                 $subverse->description = $data['Description'];
-                $subverse->subscriber_count = $data["Subscribers"];
-                $subverse->created_on = $data["Created"];
+                $subverse->subscriberCount = $data["Subscribers"];
+                $subverse->createdOn = $data["Created"];
 
                 $subverses[] = $subverse;
             }
+        } else
+        {
+            return $raw_subverses;
         }
 
         return $subverses;
-    }
-
-    /**
-     * Return the name of the subverse.
-     *
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns a description of this subverse.
-     *
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Returns the count of subscribers for this subverse.
-     *
-     * @return mixed
-     */
-    public function getSubscriberCount()
-    {
-        return $this->subscriber_count;
-    }
-
-    /**
-     * Returns the date the Subverse was created.
-     *
-     * @return string
-     */
-    public function getCreatedOn()
-    {
-        return $this->created_on;
     }
 }

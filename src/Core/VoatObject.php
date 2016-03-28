@@ -49,6 +49,30 @@ class VoatObject
     }
 
     /**
+     * Magic getter
+     *
+     * @param $property
+     * @return mixed
+     */
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    /**
+     * Magic setter
+     *
+     * @param $property
+     * @param $value
+     */
+    public function __set($property, $value) {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
+    }
+
+    /**
      * Given a PSR7 response, retrieve the body contents.
      *
      * @param ResponseInterface $response
@@ -67,7 +91,7 @@ class VoatObject
             if ($this->use_raw)
                 return $raw;
 
-            $output = json_decode($raw);
+            $output = json_decode($raw, true);
             if (is_null($output))
                 throw new JsonResponseException("Failed to decode json response.");
         }

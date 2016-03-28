@@ -3,7 +3,7 @@
 use Devsi\PhpVoat\PhpVoat;
 
 /**
- * Test Voat submissions
+ * Test Voat single submission
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
@@ -14,7 +14,7 @@ class SubmissionTest extends \PHPUnit_Framework_TestCase
      */
     public function can_retrieve_a_list_of_banned_hostnames()
     {
-        $submission = PhpVoat::Submission();
+        $submission = PhpVoat::submission();
         $bannedHostnames = $submission->getBannedHostnames();
 
         // assert array

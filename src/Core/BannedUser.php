@@ -1,15 +1,17 @@
 <?php namespace Devsi\PhpVoat\Core;
 
 /**
- *
+ * @property string $reason;
+ * @property string $bannedOnDate;
+ * @property string $bannedByUser;
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */
 class BannedUser extends User
 {
     protected $reason;
-    protected $banned_on_date;
-    protected $banned_by_user;
+    protected $bannedOnDate;
+    protected $bannedByUser;
 
     /**
      * Returns a list of banned users on Voat.
@@ -39,46 +41,17 @@ class BannedUser extends User
 
                 $u->username = $data["Username"];
                 $u->reason = $data["reason"];
-                $u->banned_on_date = $data["added on"];
-                $u->banned_by_user = $data["added by"];
+                $u->bannedOnDate = $data["added on"];
+                $u->bannedByUser = $data["added by"];
 
                 $bannedUsers[] = $u;
             }
-        } else {
+        } else
+        {
             // return raw
             return $users;
         }
 
         return $bannedUsers;
-    }
-
-    /**
-     * Returns the reason this user was banned.
-     *
-     * @return string
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
-     * Returns the date this user was banned.
-     *
-     * @return string
-     */
-    public function getBannedOnDate()
-    {
-        return $this->banned_on_date;
-    }
-
-    /**
-     * Returns the username of the administrator who banned this user.
-     *
-     * @return string
-     */
-    public function getBannedByUser()
-    {
-        return $this->banned_by_user;
     }
 }

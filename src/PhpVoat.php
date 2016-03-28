@@ -2,6 +2,7 @@
 
 use Devsi\PhpVoat\Core\BannedUser;
 use Devsi\PhpVoat\Core\Submission;
+use Devsi\PhpVoat\Core\Submissions;
 use Devsi\PhpVoat\Core\Subverse;
 use Devsi\PhpVoat\Core\VoatObject;
 use Devsi\PhpVoat\Adapter\GuzzleHttpClient;
@@ -19,9 +20,9 @@ class PhpVoat
      *
      * @return Subverse
      */
-    public static function Subverse()
+    public static function subverse()
     {
-        return new Subverse( static::GetHttpClient() );
+        return new Subverse( static::getHttpClient() );
     }
 
     /**
@@ -29,18 +30,28 @@ class PhpVoat
      *
      * @return Submission
      */
-    public static function Submission()
+    public static function submission()
     {
-        return new Submission( static::GetHttpClient() );
+        return new Submission( static::getHttpClient() );
+    }
+
+    /**
+     * Get Submissions object.
+     *
+     * @return Submissions
+     */
+    public static function submissions()
+    {
+        return new Submissions( static::getHttpClient() );
     }
 
     /**
      * Get a BannedUser object.
      *
      */
-    public static function BannedUser()
+    public static function bannedUser()
     {
-        return new BannedUser( static::GetHttpClient() );
+        return new BannedUser( static::getHttpClient() );
     }
 
     /**
@@ -48,7 +59,7 @@ class PhpVoat
      *
      * @return HttpClientInterface
      */
-    protected static function GetHttpClient()
+    public static function getHttpClient()
     {
         return new GuzzleHttpClient([
             "base_uri" => VoatObject::API_BASE . VoatObject::API_VER

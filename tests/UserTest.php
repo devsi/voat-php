@@ -14,7 +14,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     public function can_retrieve_banned_users()
     {
-        $bannedUser = PhpVoat::BannedUser();
+        $bannedUser = PhpVoat::bannedUser();
         $banned = $bannedUser->getAll();
 
         // assert array

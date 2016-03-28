@@ -1,5 +1,7 @@
 <?php namespace Devsi\PhpVoatTests;
 
+use Devsi\PhpVoat\Core\Endpoints;
+use Devsi\PhpVoat\Exception\TooManyRequestsException;
 use Devsi\PhpVoat\PhpVoat;
 use GuzzleHttp\Client;
 
@@ -34,9 +36,21 @@ class GuzzleConnectTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function voat_object_guzzle_injected()
+    public function too_many_requests_to_voat_api()
     {
-        $voatRestClient = PhpVoat::Subverse()->getHttpClient();
-        $this->assertInstanceOf("Devsi\\PhpVoat\\Contract\\HttpClientInterface", $voatRestClient);
+        $this->expectException(TooManyRequestsException::class);
+
+        $httpClient = PhpVoat::getHttpClient();
+        $httpClient->get("frontpage");
+        $httpClient->get("frontpage");
+    }
+
+    /**
+     * @test
+     */
+    public function voat_object_http_client_injected()
+    {
+        $httpClient = PhpVoat::getHttpClient();
+        $this->assertInstanceOf("Devsi\\PhpVoat\\Contract\\HttpClientInterface", $httpClient);
     }
 }

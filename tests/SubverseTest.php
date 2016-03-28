@@ -14,7 +14,7 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
      */
     public function can_retrieve_default_subverses()
     {
-        $subverse = PhpVoat::Subverse();
+        $subverse = PhpVoat::subverse();
         $defaultSubverses = $subverse->getDefaultSubverses();
 
         // assert array
@@ -27,7 +27,7 @@ class SubverseTest extends \PHPUnit_Framework_TestCase
      */
     public function can_retrieve_top_200_subverses()
     {
-        $subverse = PhpVoat::Subverse();
+        $subverse = PhpVoat::subverse();
         $top200 = $subverse->getTop200Subverses();
 
         // assert array
