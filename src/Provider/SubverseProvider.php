@@ -1,6 +1,7 @@
 <?php namespace Devsi\PhpVoat\Provider;
 
 use Devsi\PhpVoat\Model;
+use Devsi\PhpVoatTests\SubverseTest;
 
 /**
  *
@@ -48,6 +49,32 @@ class SubverseProvider extends Provider
             $subverse->description = $data['Description'];
             $subverse->subscriberCount = $data["Subscribers"];
             $subverse->createdOn = $data["Created"];
+
+            return $subverse;
+        });
+    }
+
+    /**
+     * Returns side bar information for a given subverse
+     *
+     * @param string $subverseName
+     * @return Model\Subverse
+     * @version Legacy
+     */
+    public function getSubverseInfo($subverseName)
+    {
+        return $this->fetchData(Endpoints::LEGACY_SUBVERSE_INFO. $subverseName, function ($data)
+        {
+            $subverse = new Model\Subverse();
+
+            $subverse->name = $data["Name"];
+            $subverse->description = $data["Description"];
+            $subverse->url = $data["Title"];
+            $subverse->sidebarInfo = $data["Sidebar"];
+            $subverse->type = $data["Type"];
+            $subverse->ratedAdult = $data["RatedAdult"];
+            $subverse->createdOn = $data["CreationDate"];
+            $subverse->subscriberCount = $data["SubscriberCount"];
 
             return $subverse;
         });

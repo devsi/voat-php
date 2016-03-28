@@ -10,6 +10,29 @@ use Devsi\PhpVoat\Model;
 class UserProvider extends Provider
 {
     /**
+     * Returns a single User object, given a username.
+     *
+     * @param string $username
+     * @return Model\User
+     * @version Legacy
+     */
+    public function getSingleUser($username)
+    {
+        return $this->fetchData(Endpoints::LEGACY_USER_INFO . $username, function ($data)
+        {
+            $u = new Model\User();
+
+            $u->username = $data["Name"];
+            $u->dateRegistered = $data["RegistrationDate"];
+            $u->commentContributionPoints = $data["CCP"];
+            $u->submissionContributionPoints = $data["LCP"];
+            $u->badges = $data["Badges"];
+            
+            return $u;
+        });
+    }
+
+    /**
      * Returns a list of banned users on Voat.
      *
      * @return Model\User[]

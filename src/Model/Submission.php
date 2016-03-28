@@ -1,20 +1,20 @@
 <?php namespace Devsi\PhpVoat\Model;
 
 /**
- * @property int $id
+ * @property int    $id
  * @property string $title
  * @property string $linkDescription
  * @property string $content
- * @property int $type
+ * @property int    $type
  * @property string $subverse
  * @property string $postedBy
  * @property string $datePosted
  * @property string $dateEdited
- * @property float $rankValue
+ * @property float  $rankValue
  * @property string $thumbnailUrl
- * @property int $likes
- * @property int $dislikes
- * @property int $commentCount
+ * @property int    $likes
+ * @property int    $dislikes
+ * @property int    $commentCount
  *
  * @author Simon Willan <simon.willan@googlemail.com>
  */

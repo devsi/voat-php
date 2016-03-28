@@ -58,7 +58,6 @@ class SubmissionProvider extends Provider
      * Note: soon to be deprecated
      *
      * @return string[]
-     * @throws \Devsi\PhpVoat\Exception\JsonResponseException
      * @version Legacy
      */
     public function getBannedHostnames()
@@ -75,7 +74,7 @@ class SubmissionProvider extends Provider
      * Creates a new Submission from the raw content of a legacy API call.
      *
      * @param array $submission
-     * @return Submission
+     * @return Model\Submission
      * @version Legacy
      */
     protected function fromLegacyRaw($submission)
