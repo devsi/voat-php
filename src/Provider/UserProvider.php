@@ -20,15 +20,37 @@ class UserProvider extends Provider
     {
         return $this->fetchData(Endpoints::LEGACY_USER_INFO . $username, function ($data)
         {
-            $u = new Model\User();
+            $user = new Model\User();
 
-            $u->username = $data["Name"];
-            $u->dateRegistered = $data["RegistrationDate"];
-            $u->commentContributionPoints = $data["CCP"];
-            $u->submissionContributionPoints = $data["LCP"];
-            $u->badges = $data["Badges"];
-            
-            return $u;
+            $user->username = $data["Name"];
+            $user->dateRegistered = $data["RegistrationDate"];
+            $user->commentContributionPoints = $data["CCP"];
+            $user->submissionContributionPoints = $data["LCP"];
+            $user->badges = $data["Badges"];
+
+            return $user;
+        });
+    }
+
+    /**
+     * Returns a single Badge object, given a badge name.
+     *
+     * @param string $badgeName
+     * @return Model\Badge
+     * @version Legacy
+     */
+    public function getSingleBadge($badgeName)
+    {
+        return $this->fetchData(Endpoints::LEGACY_BADGE_INFO . $badgeName, function ($data)
+        {
+            $badge = new Model\Badge();
+
+            $badge->id = $data["BadgeId"];
+            $badge->name = $data["Name"];
+            $badge->description = $data["Title"];
+            $badge->graphic= $data["BadgeGraphics"];
+
+            return $badge;
         });
     }
 
@@ -45,17 +67,17 @@ class UserProvider extends Provider
         return $this->fetchData(Endpoints::LEGACY_BANNED_USERS, function ($data) use ($keys)
         {
             // callback data is formatted for legacy api.
-            $u = new Model\User();
+            $user = new Model\User();
 
             $data = $this->formatLegacyVoatString($data, $keys);
 
-            $u->username = $data["Username"];
-            $u->isBanned = true;
-            $u->bannedReason = $data["reason"];
-            $u->bannedOnDate = $data["added on"];
-            $u->bannedByUser = $data["added by"];
+            $user->username = $data["Username"];
+            $user->isBanned = true;
+            $user->bannedReason = $data["reason"];
+            $user->bannedOnDate = $data["added on"];
+            $user->bannedByUser = $data["added by"];
 
-            return $u;
+            return $user;
         });
     }
 }

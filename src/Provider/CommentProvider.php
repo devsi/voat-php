@@ -24,6 +24,22 @@ class CommentProvider extends Provider
         });
     }
 
+
+    /**
+     * Returns all comments for a given submission
+     *
+     * @param int $submissionId
+     * @return Comment[]
+     * @version Legacy
+     */
+    public function getAllForSubmission($submissionId)
+    {
+        return $this->fetchData(Endpoints::LEGACY_SUBMISSION_COMMENTS . $submissionId, function($data)
+        {
+            var_dump($data);
+        }, true);
+    }
+
     /**
      * Creates a new Comment from the raw content of a legacy API call.
      *
