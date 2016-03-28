@@ -100,6 +100,35 @@ class VoatObject
     }
 
     /**
+     * Given an endpoint, will return data as formatted by $callback.
+     * $callback is called once per item in the json_decoded response array.
+     *
+     * @param string $endpoint
+     * @param callable $callback
+     * @return mixed
+     */
+    protected function fetchData($endpoint, callable $callback)
+    {
+        $response = $this->getHttpClient()->get($endpoint);
+        $rawData = $this->getResponseBody($response);
+
+        $output = array();
+
+        if (is_array($rawData))
+        {
+            foreach($rawData as $data)
+            {
+                $output[] = $callback($data);
+            }
+        } else
+        {
+            return $rawData;
+        }
+
+        return $output;
+    }
+
+    /**
      * Voat legacy data is sometimes supplied as a string as follows:
      *
      *      "Username: pinky, reason: narf, added on: 1/8/2014 1:11:00pm, added by: brain"

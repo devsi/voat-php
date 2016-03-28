@@ -10,12 +10,25 @@ use Devsi\PhpVoat\PhpVoat;
 class SubmissionsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @test
+     *
      */
     public function can_retrieve_frontpage_submissions()
     {
         $submission = PhpVoat::submissions();
         $frontpage100 = $submission->getFrontpageSubmissions();
+
+        // assert array
+        $this->assertInternalType("array", $frontpage100);
+        $this->assertIsSubmission($frontpage100);
+    }
+
+    /**
+     * @test
+     */
+    public function can_retrieve_subverse_frontpage_submissions()
+    {
+        $submission = PhpVoat::submissions();
+        $frontpage100 = $submission->getSubverseSubmissions("technology");
 
         // assert array
         $this->assertInternalType("array", $frontpage100);

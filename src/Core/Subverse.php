@@ -17,30 +17,15 @@ class Subverse extends VoatObject
      * Note: soon to be deprecated
      *
      * @return Subverse[]
-     * @throws \Devsi\PhpVoat\Exception\JsonResponseException
      */
     public function getDefaultSubverses()
     {
-        $subverses = array();
+        $subverses = $this->fetchData(Endpoints::LEGACY_DEFAULT_SUBVERSES, function ($data) {
+            $subverse = new Subverse($this->getHttpClient());
+            $subverse->name = $data;
 
-        $response = $this->getHttpClient()->get(Endpoints::LEGACY_DEFAULT_SUBVERSES);
-
-        $raw_subverse_names = $this->getResponseBody($response);
-
-        if (is_array($raw_subverse_names))
-        {
-            // build an array of subverses
-            foreach ($raw_subverse_names as $name)
-            {
-                $subverse = new Subverse($this->getHttpClient());
-                $subverse->name = $name;
-
-                $subverses[] = $subverse;
-            }
-        } else {
-            // return raw
-            return $raw_subverse_names;
-        }
+            return $subverse;
+        });
 
         return $subverses;
     }
@@ -50,37 +35,23 @@ class Subverse extends VoatObject
      * Notes: soon to be deprecated
      *
      * @returns Subverse[]
-     * @throws \Devsi\PhpVoat\Exception\JsonResponseException
      */
     public function getTop200Subverses()
     {
-        $subverses = array();
+        $keys = array("Name", "Description", "Subscribers", "Created");
 
-        $response = $this->getHttpClient()->get(Endpoints::LEGACY_TOP200_SUBVERSES);
-
-        $raw_subverses = $this->getResponseBody($response);
-
-        if (is_array($raw_subverses))
+        $subverses = $this->fetchData(Endpoints::LEGACY_TOP200_SUBVERSES, function ($data) use($keys)
         {
-            $subverse_keys = array("Name", "Description", "Subscribers", "Created");
+            $subverse = new Subverse($this->getHttpClient());
+            $data = $this->formatLegacyVoatString($data, $keys);
 
-            // build an array of subverses
-            foreach ($raw_subverses as $string_to_split)
-            {
-                $subverse = new Subverse($this->getHttpClient());
-                $data = $this->formatLegacyVoatString($string_to_split, $subverse_keys);
+            $subverse->name = $data['Name'];
+            $subverse->description = $data['Description'];
+            $subverse->subscriberCount = $data["Subscribers"];
+            $subverse->createdOn = $data["Created"];
 
-                $subverse->name = $data['Name'];
-                $subverse->description = $data['Description'];
-                $subverse->subscriberCount = $data["Subscribers"];
-                $subverse->createdOn = $data["Created"];
-
-                $subverses[] = $subverse;
-            }
-        } else
-        {
-            return $raw_subverses;
-        }
+            return $subverse;
+        });
 
         return $subverses;
     }
