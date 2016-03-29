@@ -13,7 +13,7 @@ class CommentProvider extends Provider
      * Returns a single Comment object of a given id
      *
      * @param int $id
-     * @return Comment
+     * @return Model\Comment
      * @version Legacy
      */
     public function getSingleComment($id)
@@ -29,7 +29,7 @@ class CommentProvider extends Provider
      * Returns all comments for a given submission
      *
      * @param int $submissionId
-     * @return Comment[]
+     * @return Model\Comment[]
      * @version Legacy
      */
     public function getAllForSubmission($submissionId)

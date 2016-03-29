@@ -42,7 +42,7 @@ class SubmissionProvider extends Provider
      * Returns a single Submission object of a given id
      *
      * @param int $id
-     * @return Submission
+     * @return Model\Submission
      * @version Legacy
      */
     public function getSingleSubmission($id)
